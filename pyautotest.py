@@ -61,7 +61,7 @@ if is_admin():
     success("Initial save")
 
     with open("autosai_test.txt", "w+") as doc:
-        doc.write("Autosai is ready")
+        doc.write("1101")
 
     expected_strokes = 1
     current_strokes = updateCurrentStrokes()

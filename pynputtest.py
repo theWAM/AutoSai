@@ -34,7 +34,7 @@ if is_admin():
         with open("autosai_test.txt", "r") as doc:
             document = doc.read()
 
-        if document == "Autosai is ready":
+        if document == "1101":
             print("Autosai is ready!\n")
             f = open("autosai_mouse_log.txt","w+")
             f.write("#0")
