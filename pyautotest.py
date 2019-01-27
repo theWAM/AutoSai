@@ -67,19 +67,25 @@ if is_admin():
     current_strokes = updateCurrentStrokes()
     innactivity_start = time.time()
     saved = False
+    match_count = 0
+    match_limit = 3
 
     while True:
         while not (expected_strokes == current_strokes):
-            print("Not matched yet")
+            match_count = 0
+            saved = False
+            print(expected_strokes, "!=", current_strokes)
             current_strokes = updateCurrentStrokes()
             if time.time() - innactivity_start >= 1.0 and not saved:
                 print("SAVE FUNCTION ACTIVATED")
                 saveCanvas()
                 saved = True
-                break
-        print("MATCHED")
-        saveCanvas()
-        time.sleep(2)
+        if match_count < match_limit:
+            print(expected_strokes, "===", current_strokes)
+            match_count += 1
+            saveCanvas()
+            expected_strokes += 1
+            time.sleep(2)
 
 else:
     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
