@@ -21,6 +21,14 @@ def saveCanvas():
     startSai()
     pressCtrlAnd('s')
 
+def halfSecSince(start):
+    if start <= 0.0:
+        return False
+    elif time.time() - start >= 0.5:
+        saveCanvas()
+        return True
+    return False
+
 def indexAfterPound(string):
         try:
             return string.rfind("#") + 1
@@ -64,35 +72,22 @@ if is_admin():
     with open("autosai_test.txt", "w+") as doc:
         doc.write("1101")
 
-    expected_strokes = 1
-    current_strokes = updateCurrentStrokes()
-    innactivity_start = time.time()
-    saved = False
-    match_count = 0
-    match_limit = 3
-
+    last_strokes = 0
+    innactivity_start = 0.0
     while True:
-        while not (expected_strokes <= current_strokes):
-
-            if saved: # If we just saved 
-                innactivity_start = time.time()
-            match_count = 0
-            saved = False
-            print(expected_strokes, "!=", current_strokes)
-            current_strokes = updateCurrentStrokes()
-            if time.time() - innactivity_start >= 1.0 and not saved:
-                print("SAVE FUNCTION ACTIVATED")
-                saveCanvas()
-                saved = True
-
-        if match_count < match_limit: # As long as we haven't saved > 2 times w/o any changes...
-            print(expected_strokes, "<=", current_strokes)
-            match_count += 1
-            if expected_strokes == current_strokes:
-                time.sleep(1)
+        current_strokes = updateCurrentStrokes()
+        if last_strokes != current_strokes:
         
-        #Fast forward expected strokes
-        expected_strokes += 1
+            if innactivity_start == 0.0:
+                print("Mouse activity detected")
+                print("Starting innactivity clock")
+                innactivity_start = time.time()
+        if not innactivity_start == 0.0 and halfSecSince(innactivity_start):
+            print("Saving canvas...\n")
+            saveCanvas()
+            innactivity_start = 0.0
+        
+        last_strokes = current_strokes
 
 else:
     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
