@@ -60,6 +60,7 @@ if is_admin():
     pg.press('enter')
     success("Initial save")
 
+    # Let's pynputtest know that it can start listening for mouse activity
     with open("autosai_test.txt", "w+") as doc:
         doc.write("1101")
 
@@ -71,7 +72,10 @@ if is_admin():
     match_limit = 3
 
     while True:
-        while not (expected_strokes == current_strokes):
+        while not (expected_strokes <= current_strokes):
+
+            if saved: # If we just saved 
+                innactivity_start = time.time()
             match_count = 0
             saved = False
             print(expected_strokes, "!=", current_strokes)
@@ -80,12 +84,15 @@ if is_admin():
                 print("SAVE FUNCTION ACTIVATED")
                 saveCanvas()
                 saved = True
-        if match_count < match_limit:
-            print(expected_strokes, "===", current_strokes)
+
+        if match_count < match_limit: # As long as we haven't saved > 2 times w/o any changes...
+            print(expected_strokes, "<=", current_strokes)
             match_count += 1
-            saveCanvas()
-            expected_strokes += 1
-            time.sleep(2)
+            if expected_strokes == current_strokes:
+                time.sleep(1)
+        
+        #Fast forward expected strokes
+        expected_strokes += 1
 
 else:
     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
