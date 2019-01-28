@@ -43,7 +43,7 @@ def is_admin():
 
 # If cmd prompt is not administrator, open admin cmd prompt and run program
 if is_admin():
-    filename = pg.prompt(title = 'AutoSave', text = "Enter the name you wish for your file to have")
+    filename = pg.prompt(title = 'AutoSAI', text = "Enter the name you wish for your file to have")
     startSai()
 
     time.sleep(2)
