@@ -9,7 +9,7 @@ def runListener():
         except ValueError:
             return "error"
     def on_click(x,y,button,pressed):
-        if pressed:
+        if not pressed:
             f = open("autosai_mouse_log.txt", "r+")
             file_contents = f.read()
             current_strokes =  int(file_contents[indexAfterPound(file_contents):]) + 1
